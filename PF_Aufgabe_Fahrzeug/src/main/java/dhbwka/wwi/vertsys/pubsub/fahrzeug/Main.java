@@ -190,7 +190,7 @@ public class Main {
                 values = nextLine.split("\\|");
                 if(values.length<2)
                     System.out.println("Die Zeile hat das falsche Format: "+nextLine);
-                waypoints.add(new WGS84(Double.parseDouble(values[0]), Double.parseDouble(values[1])));
+                waypoints.add(new WGS84(Double.parseDouble(values[0])/100000, Double.parseDouble(values[1])/100000));
             }
         } catch (NumberFormatException nfE) {
             System.out.println("Die Variable ist kein Double: " + values[i]);
