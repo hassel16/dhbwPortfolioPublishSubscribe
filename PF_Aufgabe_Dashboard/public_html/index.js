@@ -1,5 +1,3 @@
-alert("Die Refernzdokumentation für Paho-JavaScript gibt es hier:\n\nhttp://www.eclipse.org/paho/files/jsdoc/Paho.MQTT.Client.html");
-
 /**
  * Hauptklasse für unser schönes, kleines Dashboard. :-)
  */
@@ -73,12 +71,12 @@ class VehicleDashboard {
         this.mqttClient.onMessageArrived = message => this.onMessageArrived(message);
 
         let connectOptions = {
-                onSuccess: () => this.onConnect(),
+            onSuccess: () => this.onConnect(),
             onFailure: (ctx, code, message) => this.onDisconnect({
-            errorCode: code,
-            errorMessage: message
-        })
-    };
+                errorCode: code,
+                errorMessage: message
+            })
+        };
         this.mqttClient.connect(connectOptions);
 
         // TODO: Verbindung herstellen
@@ -127,22 +125,18 @@ class VehicleDashboard {
      */
     onMessageArrived(mqttMessage) {
         let message = JSON.parse(mqttMessage.payloadString);
-        if(message.VEHICLE_READY == undefined && message.CONNECTION_LIST == undefined){
-            this.updateVehicle(message);
-        }else if(message.VEHICLE_READY == undefined && message.SENSOR_DATA == undefined){
-            this.removeVehicle(message);
-        }else if(message.CONNECTION_LIST == undefined && message.SENSOR_DATA == undefined){
-            this.addVehicle(message);
+        switch (message.type) {
+            case "VEHICLE_READY":
+                this.addVehicle(message);
+                break;
+            case "CONNECTION_LOST":
+                this.removeVehicle(message);
+                break;
+            case "SENSOR_DATA":
+                this.updateVehicle(message);
+                break;
+            default: break;
         }
-
-        // TODO: Anzeige aktualisieren
-        //
-        // Hierfür muss der im JSON mitgesendete Nachrichtentyp
-        // ausgewertet werden.
-        //
-        // VEHICLE_READY: this.addVehicle(message) aufrufen
-        // CONNECTION_LIST: this.removeVehicle(message) aufrufen
-        // SENSOR_DATA: this.updateVehicle(message) aufrufen
     }
 
     /**

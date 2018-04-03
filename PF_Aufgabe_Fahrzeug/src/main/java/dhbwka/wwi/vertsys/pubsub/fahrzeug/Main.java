@@ -32,11 +32,10 @@ import java.util.Scanner;
  * Goolge Maps eine Nachkommastelle mehr, als das ITN-Format erlaubt. :-)
  */
 public class Main {
-    static int idCount;
 
     public static void main(String[] args) throws Exception {
         int qos             = 0;
-        String clientId     = "vehicleProducer"+ (++idCount);
+        String clientId     = "vehicleProducer"+ (Math.random() * Math.random());
         MemoryPersistence persistence = new MemoryPersistence();
 
 
