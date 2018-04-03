@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!--
+Copyright © 2018 Dennis Schulmeister-Zimolong
+
+E-Mail: dhbw@windows3.de
+Webseite: https://www.wpvs.de/
+
+Dieser Quellcode ist lizenziert unter einer
+Creative Commons Namensnennung 4.0 International Lizenz.
+-->
+<html>
+    <head>
+        <title>🚗 Fahrzeug-Dashboard (Aufgabe)</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Eclipse Paho -->
+        <script src="libs/paho-mqtt/mqttws31.js" type="text/javascript"></script>
+
+        <!-- OpenLayers (Debug-Version für besser verständliche Fehlermeldungen) -->
+        <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+        <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+        <script src="https://openlayers.org/en/v4.6.5/build/ol-debug.js"></script>
+
+        <!-- Eigene Sachen -->
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <!-- Karte -->
+        <div id="map" class="map"></div>
+
+        <!-- Overlay mit Verbindungsdaten -->
+        <div id="connection-overlay" class="overlay">
+            <input id="mqtt-address" type="text" placeholder="MQTT-Broker" aria-label="MQTT-Broker">
+            <div id="btn-connect" class="btn green" onclick="dashboard.connect()">Verbinden</div>
+            <div id="btn-disconnect" class="btn red" onclick="dashboard.disconnect()">Trennen</div>
+        </div>
+
+        <!-- Fahrzeugliste -->
+        <div id="vehicle-list" class="overlay"></div>
+
+        <div id="vehicle-template" class="hidden">
+            <div class="vehicle" id="vehicle-___ID___">
+                <table>
+                    <tr>
+                        <td class="label">
+                            Fahrzeug-ID:
+                        </td>
+                        <td>
+                            <a href="" onclick="dashboard.onVehicleClicked(event)" data-vehicle="___ID___">
+                                <span class="value-id"></span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            Koordinaten:
+                        </td>
+                        <td>
+                            <span class="value-latitude"></span>,
+                            <span class="value-longitude"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            Status:
+                        </td>
+                        <td>
+                            <span class="value-status"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            Drehzahl:
+                        </td>
+                        <td>
+                            <span class="value-gear"></span>. Gang,
+                            <span class="value-rpm"></span> rpm
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            Geschwindigkeit:
+                        </td>
+                        <td>
+                            <span class="value-kmh"></span> km/h
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <script language="javascript" type="text/javascript" src="index.js"></script>
+    </body>
+</html>
