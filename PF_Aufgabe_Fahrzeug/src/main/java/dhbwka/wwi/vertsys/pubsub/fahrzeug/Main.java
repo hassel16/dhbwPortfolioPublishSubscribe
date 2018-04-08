@@ -34,8 +34,10 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws Exception {
+        //Die Verbindung Konfigurieren
         int qos             = 0;
-        String clientId     = "vehicleProducer"+ (Math.random() * Math.random());
+        //Einzigartige ClientId erstellen. Wollte sichergehen, deswegen UUID und currentTime
+        String clientId     = "vehicleProducer_"+ UUID.randomUUID().toString()+"_"+System.currentTimeMillis();
         MemoryPersistence persistence = new MemoryPersistence();
 
 
@@ -79,11 +81,13 @@ public class Main {
         // und soll an das Topic Utils.MQTT_TOPIC_NAME gesendet werden.
             MqttClient sampleClient = new MqttClient(mqttAddress,clientId,persistence);
 
+            //lastWillMessage definieren
             StatusMessage lastWillMessage= new StatusMessage();
             lastWillMessage.type=StatusType.CONNECTION_LOST;
             lastWillMessage.vehicleId=vehicleId;
             lastWillMessage.message="Mein letzter Wille";
 
+            //Verbindung zum Broker herstellen
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
             connOpts.setWill(Utils.MQTT_TOPIC_NAME, lastWillMessage.toJson(), qos, true);
@@ -95,11 +99,13 @@ public class Main {
         // DONE: Statusmeldung mit "type" = "StatusType.VEHICLE_READY" senden.
         // Die Nachricht soll soll an das Topic Utils.MQTT_TOPIC_NAME gesendet
         // werden.
+            //Nachricht zum Anmelden des Fahrzeuges erstellen
             StatusMessage initStatus= new StatusMessage();
             initStatus.type=StatusType.VEHICLE_READY;
             initStatus.vehicleId=vehicleId;
             initStatus.message="Fahrzeug anmelden";
 
+            //Die Anmelde Nachricht na den Broker senden
             MqttMessage initMessage = new MqttMessage();
             initMessage.setQos(0);
             initMessage.setPayload(initStatus.toJson());
@@ -108,8 +114,11 @@ public class Main {
         // DONE: Thread starten, der jede Sekunde die aktuellen Sensorwerte
         // des Fahrzeugs ermittelt und verschickt. Die Sensordaten sollen
         // an das Topic Utils.MQTT_TOPIC_NAME + "/" + vehicleId gesendet werden.
+
+            //Das Fahrzeugobjekt erstellen
         Vehicle vehicle = new Vehicle(vehicleId, waypoints);
         vehicle.startVehicle();
+            //Die Fahrzeugdaten jede Sekunde an den Broker senden
             java.util.Timer timer= new java.util.Timer();
             System.out.println("Start publishing vehicle data");
             timer.schedule(new java.util.TimerTask() {
@@ -125,7 +134,7 @@ public class Main {
             }, 0,1000);
 
 
-        // Warten, bis das Programm beendet werden soll
+        // Warten, bis das Programm beendet werden soll, da das Fahrzeug in einem anderen Thread ausgeführt wird
         Utils.fromKeyboard.readLine();
 
         vehicle.stopVehicle();
