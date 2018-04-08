@@ -9,8 +9,6 @@
  */
 package dhbwka.wwi.vertsys.pubsub.fahrzeug;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-import jdk.net.SocketFlow;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -22,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 /**
  * Hauptklasse unseres kleinen Progrämmchens.
